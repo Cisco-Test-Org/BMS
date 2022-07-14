@@ -1,0 +1,9 @@
+.list-group-item{
+    position: relative;
+    height: 55px;
+}
+
+.btn-danger {
+    position: absolute;
+    right: 5px;
+}

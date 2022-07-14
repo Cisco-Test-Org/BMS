@@ -1,11 +1,18 @@
-import React, { ChangeEvent, ChangeEventHandler, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Book from "../model/Book";
 
-const BookControl: React.FC<{onAdd: (book: Book)=> void}> = ({onAdd}) => {
+const BookControl: React.FC<{onAdd: (book: Book)=> void, updates: Book}> = ({onAdd, updates}) => {
 
     const [enteredTitle, setEnteredTitle] = useState('')
     const [enteredAuthor, setEnteredAuthor] = useState('')
     const [enteredPage, setEnteredPage] = useState(0)
+
+    useEffect(() => {
+        setEnteredTitle(updates.name)
+        setEnteredAuthor(updates.author)
+        setEnteredPage(updates.pages)
+    })  
+
 
     const titleChangehandler = (event: ChangeEvent<HTMLInputElement>)  => {
         setEnteredTitle(event.target.value)
@@ -20,12 +27,22 @@ const BookControl: React.FC<{onAdd: (book: Book)=> void}> = ({onAdd}) => {
     }
 
     const handleSubmit = (event: any) => {
+        
         event.preventDefault()
-        const book = new Book(Math.random().toString(), enteredTitle, enteredAuthor, enteredPage)
-        onAdd(book)
-        setEnteredTitle('')
-        setEnteredAuthor('')
-        setEnteredPage(0)
+        if(updates.id == ''){
+            const book = new Book(Math.random().toString(), enteredTitle, enteredAuthor, enteredPage)
+            onAdd(book)
+            setEnteredTitle('')
+            setEnteredAuthor('')
+            setEnteredPage(0)
+        }
+        if(updates.id != ''){
+            const book = new Book(updates.id, enteredTitle, enteredAuthor, enteredPage)
+            onAdd(book)
+            setEnteredTitle('')
+            setEnteredAuthor('')
+            setEnteredPage(0)
+        }
     }
     
 
@@ -38,8 +55,13 @@ const BookControl: React.FC<{onAdd: (book: Book)=> void}> = ({onAdd}) => {
                     <input value={enteredPage} onChange={pagesChangeHandler} type="number" className="form-control mt-2" id="bk_pages" placeholder="Page Count" />
                 </div>
                 <div className="mb-1">
-                <button type="submit" className="col-4 btn btn-primary">Add Book</button>
-            </div>
+                    {/* <button type="submit" className='col-4 btn btn-primary' disabled={updates.id != ''}>Add Book</button> */}
+                    <button type="submit" className='col-4 btn btn-primary'>Add Book</button>
+                </div>
+                <div className="mb-1">
+                    {/* <button type="submit" className='col-4 btn btn-warning' disabled={updates.id === ''}>Update Book</button> */}
+                    <button type="submit" className='col-4 btn btn-warning'>Update Book</button>
+                </div>
             </form>
 
         </div>

@@ -1,23 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BookConsole from "./components/BookConsole";
 import BookControl from "./components/BookControl";
-import BOOK_LIST from "./db/BookList";
 import Book from "./model/Book";
 
 const App = () => {
 
-  const [bookList, setBookList] = useState(BOOK_LIST)
+  const [bookList, setBookList] = useState([])
+  useEffect(() => {
+    fetchData();
+  })
+
+  const fetchData = async () => {
+    const response = await fetch('http://localhost:8080/api/v1/books')
+    const data = await response.json()
+    
+    
+    const list = data.bookList.map((book : any) => {
+      return new Book(book.id, book.title, book.author, book.pages)
+    })
+    setBookList(list)
+  }
+
 
   const handleAddBook = (book: Book): void =>{
-    setBookList(prevData => {
-      return [...prevData, book]
-    })
+    // setBookList(prevData => {
+    //   return [...prevData, book]
+    // })
   }
 
   const handleDeleteBook = (id: string) => {
-    setBookList(prevData => {
-      return [...prevData.filter(data => data.id != id)]
-    })
+    // setBookList(prevData => {
+    //   return [...prevData.filter(data => data.id != id)]
+    // })
   }
 
   const handleGetUpdate = (id: string) => {

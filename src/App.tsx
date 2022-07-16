@@ -7,20 +7,11 @@ import Book from "./model/Book";
 const App = () => {
 
   const [bookList, setBookList] = useState(BOOK_LIST)
-  const [updateBook, setUpdateBook] = useState<Book>({id: '', name: '', author: '', pages: 0})
 
   const handleAddBook = (book: Book): void =>{
-
-    const id = bookList.findIndex(index => index.id === book.id)
-    if(id){
-      const newList = [...bookList]
-      newList[id] = {id: id.toString(), name: book.name, author: book.author, pages: book.pages}
-      setBookList(newList)
-    }else{
-      setBookList(prevData => {
-        return [...prevData, book]
-      })
-    }
+    setBookList(prevData => {
+      return [...prevData, book]
+    })
   }
 
   const handleDeleteBook = (id: string) => {
@@ -29,16 +20,26 @@ const App = () => {
     })
   }
 
-  const handleUpdateSet = (id: string) => {
-    const book: Book | any = bookList.find(b => b.id === id)    
-    setUpdateBook({id: id, name: book.name, author: book?.author, pages: book.pages})    
+  const handleGetUpdate = (id: string) => {
+    console.log(id);
   }
+
 
   return (
     <div className="container">
       <h1 className="text-primary mt-5 mb-5">Book Management System</h1>
-      <BookControl onAdd={handleAddBook} updates={updateBook}/>
-      <BookConsole list={bookList} onDelete={handleDeleteBook} onUpdateSet={handleUpdateSet}/>
+
+      <div className="row">
+      <div className="col-6">
+        <BookControl onAdd={handleAddBook} />
+        </div>
+        <div className="col-6">
+        <BookConsole list={bookList} onDelete={handleDeleteBook} onGetUpdate={handleGetUpdate}/>
+        </div>
+      </div>
+
+
+
     </div>
   );
 }
